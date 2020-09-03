@@ -1,0 +1,6 @@
+export const ADD_IN_BASKET = 'ADD_IN_BASKET';
+export const INIT_PRODUCTS = 'INIT_PRODUCTS';
+export const INIT_BASKET = 'INIT_BASKET';
+export const DELETE_ONE_PRODUCT = 'DELETE_ONE_PRODUCT';
+export const INIT_TABLE = "INIT_TABLE";
+export const CLEAN_BASKET = "CLEAN_BASKET";

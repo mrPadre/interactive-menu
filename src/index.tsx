@@ -3,11 +3,36 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import {BrowserRouter} from 'react-router-dom';
+import {createMuiTheme, MuiThemeProvider} from '@material-ui/core/styles';
+import {SwipeableList} from '@sandstreamdev/react-swipeable-list';
+import {Provider} from 'react-redux';
+import {configureStore} from './service/store/config';
+
+const theme = createMuiTheme({
+    palette: {
+        primary: {
+            main: '#124433'
+        },
+        secondary: {
+            main: '#D4C73B'
+        }
+    }
+});
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+    <React.Fragment>
+        <BrowserRouter>
+            <Provider store={configureStore()}>
+                <MuiThemeProvider theme={theme}>
+                    <SwipeableList>
+                        <App />
+                    </SwipeableList>
+                </MuiThemeProvider>
+            </Provider>   
+        </BrowserRouter>
+    </React.Fragment>
+  ,
   document.getElementById('root')
 );
 
