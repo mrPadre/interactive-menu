@@ -2,10 +2,9 @@ import React, {useMemo, useCallback, useState} from 'react';
 import {makeStyles, Tab, Theme} from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
-import {uuid} from 'uuidv4';
-import {useSelector} from 'react-redux';
-import {Store} from '../../service/store/reducer';
+import {v4} from 'uuid';
 import {Link} from 'react-scroll';
+import {CATEGORY} from '../../consts/consts';
 
 const useStyles = makeStyles((theme: Theme) => ({
     selectItem: {
@@ -86,7 +85,7 @@ interface Enum {
     [key:string]: string;
 }
 
-const CategoryName: Enum = {
+export const CategoryName: Enum = {
     'pie': 'Пироги',
     'salad': 'Салат',
     'second': 'Горячее',
@@ -96,17 +95,8 @@ const CategoryName: Enum = {
 
 const MenuContainerComponent: React.FC = () => {
     const classes = useStyles();
-    const {products} = useSelector((state: Store) => state);
 
     const [isOpen, setIsOpen] = useState(false);
-    const menu = useMemo(() => {
-        const arr: Menu[] = [];
-            products.map((item) => {
-                const elem = {label: item.id, href:`#${item.id}`};
-                return arr.push(elem)
-            });
-        return arr;
-    }, [products])
 
     const showMenu = useCallback(() => {
         setIsOpen(!isOpen);
@@ -148,24 +138,24 @@ const MenuContainerComponent: React.FC = () => {
     },[showMenu])
 
     const renderMenu = useMemo( () => {
-        return menu.map((elem) => {
+        return CATEGORY.map((elem) => {
             return (
                 <Link
                 activeClass={classes.selectItem}
-                key={uuid()}
-                to={elem.label}
+                key={v4()}
+                to={elem.id}
                 spy={true}
                 smooth={true}
-                offset={-210}
+                offset={-250}
                 duration= {500}
                 className={item}
             > 
-            <Tab label={CategoryName[elem.label]} key={uuid()} className={classes.tab} onClick={handleGoTo}/>
+            <Tab label={elem.label} key={v4()} className={classes.tab} onClick={handleGoTo}/>
             </Link>
                 
             )
         })
-    }, [item, showMenu, menu]);
+    }, [item, handleGoTo, classes.selectItem, classes.tab]);
 
 
     return (

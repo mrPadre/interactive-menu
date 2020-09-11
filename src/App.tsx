@@ -2,29 +2,21 @@ import React, {useCallback, useEffect} from 'react';
 import './App.css';
 import HeaderComponent from './components/header-component/HeaderComponent';
 import {SwipeableListItem} from '@sandstreamdev/react-swipeable-list';
-import {makeStyles} from '@material-ui/styles';
 import {useHistory, useLocation} from 'react-router-dom';
 import Router from './service/router/router';
 import QuickMenuComponent from './components/quick-menu/QuickMenuComponent';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import apiService from './service/api/API';
-import {initProducts, initTable, initBasket} from './service/store/actions';
+import {initProducts, initTable, initBasket, initLastComments, initLike, addWaiterTime} from './service/store/actions';
 import queryString from 'querystring';
 import apiLocalStorage from './service/local-storage-service/LocalStorage';
-import {Store} from './service/store/reducer';
+import {LastComments} from './service/store/reducer';
 
-const useStyles = makeStyles(() => ({
-    mainContent: {
-    },
-    
-}))
 
 const App: React.FC = () => {
-    const classes = useStyles();
     const history = useHistory();
     const dispatch = useDispatch();
     const location = useLocation();
-    const {basket} = useSelector((state: Store) => state);
 
     useEffect(() => {
          apiService.getMenu().then((resp) => {
@@ -35,13 +27,32 @@ const App: React.FC = () => {
         if (data) {
             dispatch(initBasket(JSON.parse(data)));
         }
+        const like = apiLocalStorage.getLike();
+        if (like) {
+            const parseLike = JSON.parse(like);
+            dispatch(initLike(parseLike));
+        }
+        const waiterTime = apiLocalStorage.getWaiterTime();
+        if (waiterTime) {
+            dispatch(addWaiterTime(JSON.parse(waiterTime)));
+        }
+
+        const comments = apiLocalStorage.getLastCommets();
+        if (comments) {
+            const parseComments = JSON.parse(comments);
+            const filter = parseComments.filter((item: LastComments) => {
+                const timeNow = new Date().getTime();
+                return timeNow - item.time < 3600000;
+            });
+            dispatch(initLastComments(filter));
+        }
        
         const query = queryString.parse(location.search.slice(1));
         if (query.table) {
             dispatch(initTable(query));
         }
         
-    }, [dispatch, location]);
+    }, [dispatch, location, ]);
 
     const handleOpenInfo = useCallback((direction: string) => {
         const {pathname} = history.location;

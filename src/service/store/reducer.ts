@@ -1,15 +1,19 @@
 import * as T from './type-list';
 import apiLocalStorage from '../local-storage-service/LocalStorage';
+import apiService from '../api/API';
 
 export interface Store {
-    products: Array<Category>;
+    allProducts: Product[];
     basket: Array<Product>;
     table: string;
+    lastComments: LastComments[];
+    like: string[];
+    waiterTime: number;
 }
-export interface Camment {
+export interface Comment {
     name: string;
     comment: string;
-    rating: number;
+    rating: number | null;
 }
 export interface Product{
     name: string;
@@ -17,18 +21,28 @@ export interface Product{
     description: string;
     price: number;
     portion: number;
-    rating: number;
+    rating: number | null;
     comments: Comment[];
+    category?: string;
+    composition?: string[];
 }
 export interface Category {
     id: string;
-    products: Array<Product>;
+    products: any;
+}
+
+export interface LastComments {
+    name: string;
+    time: number;
 }
 
 const initState: Store = {
-    products: [],
+    allProducts: [],
     basket: [],
-    table: ''
+    table: '',
+    lastComments: [],
+    like: [],
+    waiterTime: 0
 };
 
 export const reducer = (store: Store = initState, actions: any): any => {
@@ -40,7 +54,7 @@ export const reducer = (store: Store = initState, actions: any): any => {
         }
         case T.INIT_PRODUCTS: {
             const products = actions.payload;
-            return {...store, products} 
+            return {...store, allProducts: [...products]} 
         }
         case T.INIT_BASKET: {
             const basket = actions.payload;
@@ -61,6 +75,55 @@ export const reducer = (store: Store = initState, actions: any): any => {
         }
         case T.INIT_TABLE: {
             return {...store, table: actions.payload.table}
+        }
+        case T.ADD_LAST_COMMENTS: {
+            const {lastComments} = store;
+            apiLocalStorage.setLastComments([...lastComments, actions.payload]);
+            return {...store, lastComments: [...lastComments, actions.payload]}
+        }
+        case T.INIT_LAST_COMMENTS: {
+            return {...store, lastComments: [...actions.payload]};
+        }
+        case T.ADD_LIKE: {
+            const {like} = store;
+            apiLocalStorage.setLike([...like, actions.payload]);
+            return {...store, like: [...like, actions.payload]}
+        }
+        case T.DELETE_LIKE: {
+            const {like} = store;
+            const filter = like.filter((item) => {
+                return item !== actions.payload;
+            })
+            apiLocalStorage.setLike([...filter])
+            return {...store, like: [...filter]}
+        }
+        case T.INIT_LIKE: {
+            return {...store, like: [...actions.payload]}
+        }
+        case T.INIT_WAITERTIME: {
+            return {...store, waiterTime: actions.payload}
+        }
+        case T.ADD_WAITERTIME: {
+            apiLocalStorage.setWaiterTime(actions.payload);
+            return {...store, waiterTime: actions.payload}
+        }
+        case T.DELETE_WAITERTIME: {
+            apiLocalStorage.removeWaiterTime();
+            return {...store, waiterTime: 0}
+        }
+        case T.ADD_COMMENT: {
+            const {allProducts} = store;
+            allProducts.forEach((item: Product) => {
+                    if (item.name === actions.name) {
+                        item.comments = [
+                            ...item.comments, actions.payload
+                        ]
+                    }
+            });
+            apiService.setMenu(allProducts).then(() => {
+                console.log('успешно')
+            })
+            return {...store, allProducts: [...allProducts]}
         }
         default: return {...store}
     }

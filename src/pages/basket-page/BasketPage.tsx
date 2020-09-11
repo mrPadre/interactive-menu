@@ -2,7 +2,7 @@ import React, {useMemo, useCallback, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {Store, Product} from '../../service/store/reducer';
 import BasketCardComponent from '../../components/basket-card-component/BasketCardComponent';
-import {uuid} from 'uuidv4';
+import {v4} from 'uuid';
 import {makeStyles} from '@material-ui/styles';
 import {Typography, Button} from '@material-ui/core';
 import {useHistory} from 'react-router';
@@ -68,7 +68,7 @@ const BasketPage: React.FC = () => {
                 </div>
             )
         }
-    }, [basket, confirmation, classes.btn, classes.btnsContainer]);
+    }, [basket, confirmation, classes.btn, classes.btnsContainer, handleCleanBasket]);
 
     const summ = useMemo(() => {
         let money = 0;
@@ -95,7 +95,7 @@ const BasketPage: React.FC = () => {
             filter.sort((a: Product, b: Product) => a.name > b.name ? 1 : -1);
             return filter.map((product) => {
                 return (
-                    <BasketCardComponent product={product} key={uuid()}/>
+                    <BasketCardComponent product={product} key={v4()}/>
                 )
             })
         } else {
@@ -116,7 +116,7 @@ const BasketPage: React.FC = () => {
         <div className={classes.container}>
             <div className={classes.header}>
                 <Typography variant='h5' className={classes.title}>
-                    Ваш заказ:
+                    ВАШ ЗАКАЗ:
                 </Typography>
             </div>
             {content}

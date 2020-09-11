@@ -1,11 +1,12 @@
 import React, {useMemo} from 'react';
 import {makeStyles, Theme, CircularProgress} from '@material-ui/core';
 import ProductCardComponent from '../product-card-component/ProductCardComponent';
-import {uuid} from 'uuidv4';
+import {v4} from 'uuid';
 import {useSelector} from 'react-redux';
-import {Store, Product, Category} from '../../service/store/reducer';
+import {Store, Product} from '../../service/store/reducer';
 import MenuContainerComponent from '../../components/menu-container-component/MenuContainerComponent';
 import ProductBlockContainer from '../product-block-container/ProductBlockContainer';
+import {CATEGORY, CategoryItem} from '../../consts/consts';
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -13,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        padding: '20px 0',
+        padding: '10px 0',
         margin: '10px 0'
         
     },
@@ -39,20 +40,22 @@ const ProductContainerComponent: React.FC = () => {
 
     const classes = useStyles();
 
-    const {products} = useSelector((state: Store) => state);
+    const {allProducts: products} = useSelector((state: Store) => state);
 
     const content = useMemo(() => {
        if (products.length) {
-        const elements = products.map((item: Category) => {
+        const elements = CATEGORY.map((item: CategoryItem) => {
             return (
-                <ProductBlockContainer id={item.id} key={uuid()} className={classes.container}>                 
-                    {item.products.map((prod: Product) => {
-                        return (
-                            <ProductCardComponent
-                            product={prod}
-                            key={uuid()} 
-                            />
-                        )
+                <ProductBlockContainer id={item.id} key={v4()} className={classes.container}>                 
+                    {products.map((prod: Product) => {
+                        if (prod.category === item.label) {
+                            return (
+                                <ProductCardComponent
+                                product={prod}
+                                key={v4()} 
+                                />
+                            )
+                        }
                     })}
                 </ProductBlockContainer>
             )
