@@ -64,7 +64,7 @@ const CommentsPageComponent: React.FunctionComponent<Props> = (props: Props) => 
 
     const classes = useStyles();
     const dispatch = useDispatch();
-    const [name, setName] = useState('');
+    const [userName, setUserName] = useState('');
     const [comment, setComment] = useState('');
     const [rating, setRating] = useState<number | null>(2);
     const {lastComments, allProducts} = useSelector((state: Store) => state);
@@ -76,7 +76,6 @@ const CommentsPageComponent: React.FunctionComponent<Props> = (props: Props) => 
   }, [pathname])
 
     const product = useMemo(() => {
-        console.log('product render');
         return allProducts.find((item) => {
             return item.name === props.match.params.id;
         })
@@ -85,10 +84,10 @@ const CommentsPageComponent: React.FunctionComponent<Props> = (props: Props) => 
     const handleSendComment = useCallback((event) => {
         event.preventDefault();
         if (product) {
-            dispatch(addComment({name, comment, rating}, product.name));
+            dispatch(addComment({name: userName, comment, rating}, product.name));
             dispatch(addLastComments({name: product.name, time: new Date().getTime()}))
         }
-    }, [name, comment, rating, product?.name, dispatch, product]);
+    }, [userName, comment, rating, product?.name, dispatch, product]);
 
     const commentForm = useMemo(() => {
         const filter = lastComments.filter((item) => {
@@ -106,26 +105,25 @@ const CommentsPageComponent: React.FunctionComponent<Props> = (props: Props) => 
                     <TextField 
                     label='Ваше имя' 
                     variant='outlined' 
-                    value={name}        
+                    value={userName}        
                     className={classes.input} 
-                    onChange={event => setName(event.target.value)}/>
+                    onChange={event => setUserName(event.target.value)}/>
                     
                     <TextField 
                     label='Ваше комментарий'  
                     variant='outlined'
-                    type='textarea'
                     multiline
                     rows={4}
                     value={comment}
                     onChange={event => setComment(event.target.value)} 
                     className={classes.input}/>
                     
-                    <Rating value={rating} className={classes.rating} onChange={(event, newValue)=> setRating(newValue)}/>
+                    <Rating name='product-rating' value={rating} className={classes.rating} onChange={(event, newValue)=> setRating(newValue)}/>
                     <Button variant='contained' type='submit' color={'primary'} onClick={handleSendComment}>Отправить</Button>
                 </form>
             )
         }
-    }, [name, comment, rating, classes.form, classes.input, classes.rating, classes.text, handleSendComment, lastComments, product])
+    }, [userName, comment, rating, classes.form, classes.input, classes.rating, classes.text, handleSendComment, lastComments, product])
     const content = useMemo(() => {
         if (product?.comments.length) {
             return (

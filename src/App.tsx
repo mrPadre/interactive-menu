@@ -11,6 +11,7 @@ import {initProducts, initTable, initBasket, initLastComments, initLike, addWait
 import queryString from 'querystring';
 import apiLocalStorage from './service/local-storage-service/LocalStorage';
 import {LastComments} from './service/store/reducer';
+import SnackbarComponent from './components/snackbar-component/SnackbarComponent';
 
 
 const App: React.FC = () => {
@@ -85,6 +86,7 @@ const App: React.FC = () => {
         }}>  
             {Router}   
         </SwipeableListItem>
+        <SnackbarComponent />
     </div>
   );
 }

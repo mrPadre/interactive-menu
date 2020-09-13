@@ -83,6 +83,17 @@ export const addWaiterTime = (payload: number): Action => {
         payload: payload
     }
 };
+export const addMessage = (payload: string): Action => {
+    return {
+        type: T.ADD_MESSAGE,
+        payload: payload
+    }
+};
+export const deleteMessage = (): Action => {
+    return {
+        type: T.DELETE_MESSAGE
+    }
+};
 export const deleteWaiterTime = (): Action => {
     return {
         type: T.DELETE_WAITERTIME

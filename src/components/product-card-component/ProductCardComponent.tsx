@@ -8,7 +8,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import ChatBubbleIcon from '@material-ui/icons/ChatBubble';
 import {Product, Store} from '../../service/store/reducer';
 import {useDispatch, useSelector} from 'react-redux';
-import {addInBasket, addLike, deleteLike} from '../../service/store/actions';
+import {addInBasket, addLike, addMessage, deleteLike, deleteMessage} from '../../service/store/actions';
 import TextOverflowComponent from '../text-overflow/TextOverflow';
 import {red} from '@material-ui/core/colors';
 import {useHistory} from 'react-router';

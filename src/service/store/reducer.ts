@@ -9,6 +9,7 @@ export interface Store {
     lastComments: LastComments[];
     like: string[];
     waiterTime: number;
+    message: string[];
 }
 export interface Comment {
     name: string;
@@ -42,15 +43,17 @@ const initState: Store = {
     table: '',
     lastComments: [],
     like: [],
-    waiterTime: 0
+    waiterTime: 0,
+    message: []
 };
 
 export const reducer = (store: Store = initState, actions: any): any => {
     switch(actions.type) {
         case T.ADD_IN_BASKET: {
-            const {basket} = store;
+            const {basket, message} = store;
             apiLocalStorage.setBasket([...basket, actions.payload]);
-            return {...store, basket: [...basket, actions.payload]}
+            message.push(`+${actions.payload.price}`)
+            return {...store, basket: [...basket, actions.payload], message: [...message]}
         }
         case T.INIT_PRODUCTS: {
             const products = actions.payload;
@@ -61,11 +64,12 @@ export const reducer = (store: Store = initState, actions: any): any => {
             return {...store, basket}
         }
         case T.DELETE_ONE_PRODUCT: {
-            const {basket} = store;
+            const {basket, message} = store;
             const index = basket.indexOf(actions.payload);
             basket.splice(index, 1);
             apiLocalStorage.setBasket([...basket]);
-            return {...store, basket: [...basket]};
+            message.push(`-${actions.payload.price}`)
+            return {...store, basket: [...basket], message: [...message]};
         }
         case T.CLEAN_BASKET: {
             let {basket} = store;
@@ -85,9 +89,10 @@ export const reducer = (store: Store = initState, actions: any): any => {
             return {...store, lastComments: [...actions.payload]};
         }
         case T.ADD_LIKE: {
-            const {like} = store;
+            const {like, message} = store;
+            message.push('❤')
             apiLocalStorage.setLike([...like, actions.payload]);
-            return {...store, like: [...like, actions.payload]}
+            return {...store, like: [...like, actions.payload], message: [...message]}
         }
         case T.DELETE_LIKE: {
             const {like} = store;
@@ -111,6 +116,16 @@ export const reducer = (store: Store = initState, actions: any): any => {
             apiLocalStorage.removeWaiterTime();
             return {...store, waiterTime: 0}
         }
+        case T.DELETE_MESSAGE: {
+            const {message} = store;
+            message.shift();
+            return {...store, message: [...message]}
+        }
+        case T.ADD_MESSAGE: {
+            const {message} = store;
+            message.push(actions.payload);
+            return {...store, message: [...message]}
+        }
         case T.ADD_COMMENT: {
             const {allProducts} = store;
             allProducts.forEach((item: Product) => {
@@ -121,7 +136,8 @@ export const reducer = (store: Store = initState, actions: any): any => {
                     }
             });
             apiService.setMenu(allProducts).then(() => {
-                console.log('успешно')
+               
+                console.log('спасибо');
             })
             return {...store, allProducts: [...allProducts]}
         }
