@@ -133,7 +133,6 @@ const MenuContainerComponent: React.FC = () => {
     }, [isOpen, classes.item, classes.open]);
 
     const handleGoTo = useCallback(() => {
-        console.log()
         showMenu()
     },[showMenu])
 
