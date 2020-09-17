@@ -1,15 +1,17 @@
-import {Product, LastComments} from '../store/reducer';
+import {Product, LastComments, Order} from '../store/reducer';
 
 class ApiLocalStorage {
     private basketKey: string;
     private commentsKey: string;
     private like: string;
     private waiterTime: string;
+    private activeOrder: string;
     constructor () {
         this.basketKey = 'basket';
         this.commentsKey = 'comment';
         this.like = 'like';
         this.waiterTime = 'waiterTime';
+        this.activeOrder = 'activeOrder';
     }
     getBasket () {
        const basket = localStorage.getItem(this.basketKey);
@@ -47,6 +49,16 @@ class ApiLocalStorage {
     }
     removeWaiterTime () {
         return localStorage.removeItem(this.waiterTime)
+    }
+    setActiveOrder (order: Order) {
+        const encodeOrder = JSON.stringify(order);
+        return localStorage.setItem(this.activeOrder, encodeOrder)
+    }
+    getActiveOrder () {
+        return localStorage.getItem(this.activeOrder);
+    }
+    removeActiveOrder () {
+        return localStorage.removeItem(this.activeOrder)
     }
 
 }

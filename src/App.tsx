@@ -7,7 +7,7 @@ import Router from './service/router/router';
 import QuickMenuComponent from './components/quick-menu/QuickMenuComponent';
 import {useDispatch} from 'react-redux';
 import apiService from './service/api/API';
-import {initProducts, initTable, initBasket, initLastComments, initLike, addWaiterTime} from './service/store/actions';
+import {initProducts, initTable, initBasket, initLastComments, initLike, addWaiterTime, initOrders, initActiveOrder} from './service/store/actions';
 import queryString from 'querystring';
 import apiLocalStorage from './service/local-storage-service/LocalStorage';
 import {LastComments} from './service/store/reducer';
@@ -20,10 +20,20 @@ const App: React.FC = () => {
     const location = useLocation();
 
     useEffect(() => {
-         apiService.getMenu().then((resp) => {
+        apiService.getMenu().then((resp) => {
             dispatch(initProducts(resp));
         });
+        apiService.getActiveOrders().then((resp) => {
+            dispatch(initOrders(resp))
+        });
+    }, [])
 
+    useEffect(() => {
+        const order = apiLocalStorage.getActiveOrder();
+        if (order) {
+            dispatch(initActiveOrder(JSON.parse(order)))
+        }
+         
         const data = apiLocalStorage.getBasket();
         if (data) {
             dispatch(initBasket(JSON.parse(data)));
@@ -53,7 +63,7 @@ const App: React.FC = () => {
             dispatch(initTable(query));
         }
         
-    }, [dispatch, location, ]);
+    }, [dispatch, location]);
 
     const handleOpenInfo = useCallback((direction: string) => {
         const {pathname} = history.location;

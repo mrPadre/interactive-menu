@@ -7,6 +7,7 @@ import BasketPage from '../../pages/basket-page/BasketPage';
 import NotFoundPage from '../../pages/not-found-page/NotFoundPage';
 import DishPageComponent from '../../pages/dish-page/DishPageComponent';
 import CommentsPageComponent from '../../pages/comments-page/CommentsPageComponent';
+import OrderPage from '../../pages/order-page/OrderPage';
 
 export default (
     <Switch>
@@ -15,6 +16,7 @@ export default (
         <Route exact path={URL.URL_BASKET} component={BasketPage} />
         <Route exact path={URL.URL_DISH} component={DishPageComponent} />
         <Route exact path={URL.URL_COMMENTS} component={CommentsPageComponent} />
+        <Route exact path={URL.URL_ORDER} component={OrderPage} />
         <Route exact component={NotFoundPage} />
     </Switch>
 )

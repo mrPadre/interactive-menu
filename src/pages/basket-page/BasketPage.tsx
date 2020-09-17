@@ -6,7 +6,7 @@ import {v4} from 'uuid';
 import {makeStyles} from '@material-ui/styles';
 import {Typography, Button} from '@material-ui/core';
 import {useHistory} from 'react-router';
-import {cleanBasket} from '../../service/store/actions';
+import {addActiveOrder, cleanBasket} from '../../service/store/actions';
 
 const useStyles = makeStyles(()=> ({
     container: {
@@ -38,10 +38,11 @@ const useStyles = makeStyles(()=> ({
 }))
 
 const BasketPage: React.FC = () => {
-    const {basket} = useSelector((state: Store) => state);
+    const {basket, table} = useSelector((state: Store) => state);
     const classes = useStyles();
     const history = useHistory();
     const dispatch = useDispatch();
+    const [paid, setPaid] = useState(false);
     const [confirmation, setConfirmation] = useState(false);
 
     const handleGoToMain = useCallback(() => {
@@ -50,14 +51,26 @@ const BasketPage: React.FC = () => {
 
     const handleCleanBasket = useCallback(() => {
         dispatch(cleanBasket());
-    }, [dispatch])
+    }, [dispatch]);
+
+    const id = useMemo(() => { 
+        return new Date().getTime();
+    }, [new Date()])
+
+    const order = useMemo(() => {
+        return {
+            id: id,
+            table: table || '?',
+            products: [...basket],
+            isPaid: paid
+        }
+    }, [id, table, basket, paid]);
 
     const successBtns = useMemo(() => {
         if (basket.length && confirmation) {
             return (
                 <div className={classes.btnsContainer}>
-                    <Button variant='contained' color='primary' className={classes.btn}>Оплатить наличными</Button>
-                    <Button variant='contained' color='secondary' className={classes.btn}>Оплатить онлайн</Button>
+                    <Button variant='contained' color='primary' className={classes.btn}>Оплатить</Button>
                 </div>
             )
         } else if (basket.length) {
@@ -93,7 +106,7 @@ const BasketPage: React.FC = () => {
                 return uniq || [];
             }, []);
             filter.sort((a: Product, b: Product) => a.name > b.name ? 1 : -1);
-            return filter.map((product) => {
+            return filter.map((product: Product) => {
                 return (
                     <BasketCardComponent product={product} key={v4()}/>
                 )
@@ -125,4 +138,4 @@ const BasketPage: React.FC = () => {
         </div>
     )
 }
-export default BasketPage;
+export default React.memo(BasketPage);

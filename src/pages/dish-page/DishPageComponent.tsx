@@ -8,6 +8,7 @@ import CommentCardComponent from '../../components/comment-card/CommentCardCompo
 import {v4} from 'uuid';
 import {addInBasket} from '../../service/store/actions';
 import {useHistory, useLocation} from 'react-router';
+import {findRating} from '../../consts/consts';
 
 interface Props {
     match: any;
@@ -121,7 +122,7 @@ const DishPageComponent: React.FunctionComponent<Props> = (props: Props) => {
                     <div className={classes.center}> 
                         РЕЙТИНГ:
                         <div className={classes.item}>
-                            <Rating value={product.rating} readOnly/>
+                            <Rating value={findRating(product)} readOnly/>
                         </div> 
                         ВСЕГО ОЦЕНОК: 
                         <div className={classes.item}>
@@ -129,9 +130,12 @@ const DishPageComponent: React.FunctionComponent<Props> = (props: Props) => {
                         </div>
                     </div>
                     
-                </div>
-                <div className={classes.line}></div>
+                    
+
+
+                    
                 <div className={classes.paper}>
+                    <Button variant='contained' color='primary' onClick={handleBack}>Назад</Button>
                     <Typography variant='body1' align='center' className={classes.title}>
                         КОММЕНТАРИИ:
                     </Typography>
@@ -146,8 +150,9 @@ const DishPageComponent: React.FunctionComponent<Props> = (props: Props) => {
       }
   }, [product, handleAddToBasket, classes.title, classes.item, classes.line, classes.paper, classes.button, classes.image, name, classes.center])
   return (
-      <div className={classes.container}>
-            {content}
+      <div className={classes.container}>  
+
+
       </div>
   );
 };

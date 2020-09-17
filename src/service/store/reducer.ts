@@ -10,11 +10,19 @@ export interface Store {
     like: string[];
     waiterTime: number;
     message: string[];
+    orders: Order[];
+    activeOrder: Order | null;
 }
 export interface Comment {
     name: string;
     comment: string;
     rating: number | null;
+}
+export interface Order{
+    id: number;
+    table: string;
+    products: Product[];
+    isPaid: boolean;
 }
 export interface Product{
     name: string;
@@ -44,7 +52,9 @@ const initState: Store = {
     lastComments: [],
     like: [],
     waiterTime: 0,
-    message: []
+    message: [],
+    orders: [],
+    activeOrder: null
 };
 
 export const reducer = (store: Store = initState, actions: any): any => {
@@ -140,6 +150,33 @@ export const reducer = (store: Store = initState, actions: any): any => {
                 console.log('спасибо');
             })
             return {...store, allProducts: [...allProducts]}
+        }
+        case T.INIT_ORDERS: {
+            return {...store, orders: [...actions.payload]}
+        }
+        case T.ADD_ORDER: {
+            const {orders} = store;
+            apiLocalStorage.setActiveOrder(actions.payload);
+            apiService.setActiveOrder([...orders, actions.payload])
+            return {...store, orders: [...orders, actions.payload], activeOrder: actions.payload}
+        }
+        case T.CLEAN_ORDER: {
+            apiLocalStorage.removeActiveOrder();
+            return {...store, activeOrder: null}
+        }
+        case T.INIT_ACTIVE_ORDER: {
+            return {...store, activeOrder: actions.payload}
+        }
+        case T.EDIT_ORDER: {
+            const {orders} = store;
+            if (orders.length) {
+                orders.forEach((item: Order) => {
+                    if (item.id === actions.payload.id) {
+                       item = actions.payload;
+                    }
+                })
+            }
+            return {...store, orders: [...orders]}
         }
         default: return {...store}
     }
