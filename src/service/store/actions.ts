@@ -1,11 +1,11 @@
 import * as T from './type-list';
-import {Category, Product, Comment, LastComments, Order} from './reducer';
+import {Product, Comment, LastComments, Order} from './reducer';
 import {ParsedUrlQuery} from 'querystring';
 
 export interface Action {
     type: string;
-    payload?: Category | Product | string |
-     Array<Category> | Array<Product> |
+    payload?: Product | string |
+     Array<Product> |
       ParsedUrlQuery | null | Comment |
        LastComments[] | LastComments |
         string[] | number | Order[] | Order;
@@ -40,7 +40,7 @@ export const cleanBasket = (): Action => {
     }
 };
 // PRODUCTS
-export const initProducts = (payload: Array<Category>): Action => {
+export const initProducts = (payload: Array<Product>): Action => {
     return {
         type: T.INIT_PRODUCTS,
         payload: payload
@@ -153,6 +153,25 @@ export const addMessage = (payload: string): Action => {
 export const deleteMessage = (): Action => {
     return {
         type: T.DELETE_MESSAGE
+    }
+};
+
+// FILTER
+export const addFilter = (payload: string | string []): Action => {
+    return {
+        type: T.ADD_FILTER,
+        payload: payload
+    }
+};
+export const removeFilter = (payload: string): Action => {
+    return {
+        type: T.REMOVE_FILTER,
+        payload: payload
+    }
+};
+export const cleanFilter = (): Action => {
+    return {
+        type: T.CLEAN_FILTER
     }
 };
 

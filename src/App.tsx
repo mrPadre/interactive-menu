@@ -5,19 +5,22 @@ import {SwipeableListItem} from '@sandstreamdev/react-swipeable-list';
 import {useHistory, useLocation} from 'react-router-dom';
 import Router from './service/router/router';
 import QuickMenuComponent from './components/quick-menu/QuickMenuComponent';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import apiService from './service/api/API';
 import {initProducts, initTable, initBasket, initLastComments, initLike, addWaiterTime, initOrders, initActiveOrder} from './service/store/actions';
 import queryString from 'querystring';
 import apiLocalStorage from './service/local-storage-service/LocalStorage';
-import {LastComments} from './service/store/reducer';
+import {LastComments, Store} from './service/store/reducer';
 import SnackbarComponent from './components/snackbar-component/SnackbarComponent';
+import FooterComponent from './components/footer-component/FooterComponent';
+import BasketFabComponent from './components/basket-fab-component/BasketFabComponent';
 
 
 const App: React.FC = () => {
     const history = useHistory();
     const dispatch = useDispatch();
     const location = useLocation();
+    const {basket} = useSelector((state: Store) => state)
 
     useEffect(() => {
         apiService.getMenu().then((resp) => {
@@ -97,6 +100,8 @@ const App: React.FC = () => {
             {Router}   
         </SwipeableListItem>
         <SnackbarComponent />
+        <FooterComponent />
+        {!!basket.length && <BasketFabComponent />}
     </div>
   );
 }

@@ -129,11 +129,8 @@ const DishPageComponent: React.FunctionComponent<Props> = (props: Props) => {
                             {product.comments.length}
                         </div>
                     </div>
-                    
-                    
-
-
-                    
+                </div>    
+                         
                 <div className={classes.paper}>
                     <Button variant='contained' color='primary' onClick={handleBack}>Назад</Button>
                     <Typography variant='body1' align='center' className={classes.title}>
@@ -151,7 +148,7 @@ const DishPageComponent: React.FunctionComponent<Props> = (props: Props) => {
   }, [product, handleAddToBasket, classes.title, classes.item, classes.line, classes.paper, classes.button, classes.image, name, classes.center])
   return (
       <div className={classes.container}>  
-
+        {content}
 
       </div>
   );

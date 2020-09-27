@@ -53,9 +53,11 @@ const BasketPage: React.FC = () => {
         dispatch(cleanBasket());
     }, [dispatch]);
 
+
+    const date = new Date();
     const id = useMemo(() => { 
-        return new Date().getTime();
-    }, [new Date()])
+        return date.getTime();
+    }, [date])
 
     const order = useMemo(() => {
         return {

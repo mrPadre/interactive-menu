@@ -12,6 +12,13 @@ export interface Store {
     message: string[];
     orders: Order[];
     activeOrder: Order | null;
+    filters: string[];
+    stock?: Stock;
+}
+export interface Stock {
+    newPrice: number;
+    icon: string;
+    description: string;
 }
 export interface Comment {
     name: string;
@@ -35,10 +42,6 @@ export interface Product{
     category?: string;
     composition?: string[];
 }
-export interface Category {
-    id: string;
-    products: any;
-}
 
 export interface LastComments {
     name: string;
@@ -54,7 +57,8 @@ const initState: Store = {
     waiterTime: 0,
     message: [],
     orders: [],
-    activeOrder: null
+    activeOrder: null,
+    filters: []
 };
 
 export const reducer = (store: Store = initState, actions: any): any => {
@@ -177,6 +181,26 @@ export const reducer = (store: Store = initState, actions: any): any => {
                 })
             }
             return {...store, orders: [...orders]}
+        }
+        case T.ADD_FILTER: {
+            let {filters} = store;
+            if (!filters.includes(actions.payload) && typeof actions.payload === 'string') {
+                filters.push(actions.payload)
+            } else if (!filters.includes(actions.payload) && actions.payload.length) {
+                filters = actions.payload
+            }
+            return {...store, filters: [...filters]}
+        }
+        case T.REMOVE_FILTER: {
+            const {filters} = store;
+            const index = filters.indexOf(actions.payload);
+            if (index !== -1) {
+                filters.splice(index, 1);
+            }
+            return {...store, filters: [...filters]}
+        }
+        case T.CLEAN_FILTER: {
+            return {...store, filters: []}
         }
         default: return {...store}
     }

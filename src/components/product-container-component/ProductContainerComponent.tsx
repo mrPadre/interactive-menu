@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         flexDirection: 'column',
         alignItems: 'center',
         padding: '10px 0',
-        margin: '10px 0'
+        margin: '5px 0'
         
     },
     img: {

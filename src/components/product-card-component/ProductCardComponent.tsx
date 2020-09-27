@@ -1,6 +1,6 @@
 import React, {useState, useMemo, useCallback} from 'react';
 import {makeStyles} from '@material-ui/styles';
-import {Theme, Card, CardContent, CardHeader, CardMedia, Typography, CardActions, IconButton, Badge, Button} from '@material-ui/core';
+import {Theme, Card, CardContent, CardHeader, CardMedia, Typography, CardActions, IconButton, Badge, Fab} from '@material-ui/core';
 import {Rating} from '@material-ui/lab';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
@@ -8,7 +8,8 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import ChatBubbleIcon from '@material-ui/icons/ChatBubble';
 import {Product, Store} from '../../service/store/reducer';
 import {useDispatch, useSelector} from 'react-redux';
-import {addInBasket, addLike, addMessage, deleteLike, deleteMessage} from '../../service/store/actions';
+import {addInBasket, addLike, deleteLike} from '../../service/store/actions';
+import AddIcon from '@material-ui/icons/Add';
 import TextOverflowComponent from '../text-overflow/TextOverflow';
 import {red} from '@material-ui/core/colors';
 import {useHistory} from 'react-router';
@@ -30,18 +31,8 @@ const useStyles = makeStyles((theme: Theme) => ({
         color: theme.palette.secondary.main
     },
     actionBox: {
-        justifyContent: 'space-between'
-    },
-    sell: {
-        width: '100%',
-        height: '100%',
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        backgroundColor: 'black',
-        opacity: 0.8,
-        zIndex: 100,
-        display: 'none',
+        justifyContent: 'space-between',
+        position: 'relative'
     },
     icon: {
         color: theme.palette.primary.main
@@ -78,8 +69,21 @@ const useStyles = makeStyles((theme: Theme) => ({
         fontWeight: 'bold',
         opacity: 0.8
         
+    },
+    addBtn: {
+        position: 'absolute',
+        left: 'calc(50% - 26px)',
+        bottom: 10,
+        marginLeft: '0!important'
     }
 }));
+
+const fabStyles = makeStyles((theme: Theme) => ({
+    
+    label: {
+        color: theme.palette.primary.main
+    },
+}))
 
 interface Props {
     product: Product;
@@ -92,6 +96,7 @@ const ProductCardComponent: React.FC<Props> = (props: Props) => {
     const [full, setFull] = useState(false);
     const {like} = useSelector((state: Store) => state);
     const history = useHistory();
+    const classesFab = fabStyles();
 
     const filter = useMemo(() => {
         return like.filter((item) => {
@@ -103,32 +108,17 @@ const ProductCardComponent: React.FC<Props> = (props: Props) => {
         history.push('/comments/' + props.product.name);
     }, [history, props.product.name])
 
-    
-
-    const activeCard = useMemo(() => {
-        const arr = [classes.sell, classes.show];
-        if (open) {
-            return arr.join(' ');
-        } else {
-            return classes.sell
-        }
-    }, [open, classes.sell, classes.show]);
-
     const handleActiveCard = useCallback(() => {
         setOpen(!open);
     }, [open]);
-
-    const handleCancel = useCallback(() => {
-        setOpen(false);
-    }, [])
 
     const handleOpenText = useCallback(() => {
         setFull(!full)
     }, [full]);
 
-    const handleAddInCard = useCallback((product: Product) => {
-        dispatch(addInBasket(product));
-        setOpen(false);
+    const handleAddInCard = useCallback(() => {
+        dispatch(addInBasket(props.product));
+        
     }, [dispatch]);
 
     const likeBtnStyle = useMemo(() => {
@@ -155,14 +145,6 @@ const ProductCardComponent: React.FC<Props> = (props: Props) => {
 
     return (
         <Card className={classes.card} elevation={3}>
-            <div className={activeCard}>
-                <Button variant="contained" className={classes.add} onClick={() => handleAddInCard(props.product)}>
-                    Добавить в заказ
-                </Button>
-                <Button variant="contained" color="primary" className={classes.cancel} onClick={handleCancel}>
-                    Отмена
-                </Button>
-            </div>
             <CardHeader title={props.product.name} />
             <CardMedia image={props.product.img} className={classes.media} onClick={handleActiveCard}>
                 <Typography className={classes.price}>
@@ -188,6 +170,9 @@ const ProductCardComponent: React.FC<Props> = (props: Props) => {
                         <MoreHorizIcon />
                     </IconButton>
                 </div>
+                <Fab className={classes.addBtn} onClick={handleAddInCard} classes={classesFab} color='secondary' size='medium'>
+                        <AddIcon />
+                </Fab>
                 <Rating value={findRating(props.product)} name="product-rating" readOnly emptyIcon={<StarBorderIcon className={classes.star}/>} />
             </CardActions>
         </Card>

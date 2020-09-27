@@ -6,7 +6,7 @@ import CreditCardIcon from '@material-ui/icons/CreditCard';
 import {Theme, Badge, Typography} from '@material-ui/core';
 import SpeedDial from '@material-ui/lab/SpeedDial';
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
-import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
+import MenuIcon from '@material-ui/icons/Menu';
 import {v4} from 'uuid';
 import {useSelector, useDispatch} from 'react-redux';
 import {Store, Product} from '../../service/store/reducer';
@@ -102,9 +102,9 @@ const QuickMenuComponent: React.FC = () => {
     }, [basket]);
 
     const handleGoToBasket = useCallback(() => {
-        history.push('/basket');
+        history.push(URL.URL_BASKET);
         handleClose();
-    },[history, handleClose]);
+    },[history, handleClose, URL.URL_BASKET]);
     const handleGoToInfo = useCallback(() => {
         history.push(URL.URL_INFO);
         handleClose();
@@ -148,7 +148,7 @@ const QuickMenuComponent: React.FC = () => {
             <SpeedDial
              ariaLabel="SpeedDial tooltip" 
              className={classes.speedDial}
-             icon={<SpeedDialIcon className={classes.icon}/>} 
+             icon={<MenuIcon className={classes.icon}/>} 
              onClose={handleClose} 
              onOpen={handleOpen} 
              open={open}>

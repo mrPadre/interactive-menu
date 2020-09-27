@@ -4,5 +4,5 @@ import {composeWithDevTools} from 'redux-devtools-extension';
 import {reducer} from './reducer';
 
 export const configureStore = (): any => {
-    return createStore (reducer, composeWithDevTools(applyMiddleware(thunk)))
+    return createStore(reducer, composeWithDevTools(applyMiddleware(thunk)))
 };

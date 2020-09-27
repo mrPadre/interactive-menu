@@ -8,14 +8,16 @@ import {createMuiTheme, MuiThemeProvider} from '@material-ui/core/styles';
 import {SwipeableList} from '@sandstreamdev/react-swipeable-list';
 import {Provider} from 'react-redux';
 import {configureStore} from './service/store/config';
+import { green } from '@material-ui/core/colors';
 
 const theme = createMuiTheme({
     palette: {
         primary: {
-            main: '#124433'
+            main: '#124433',
+            light: green[700],
         },
         secondary: {
-            main: '#D4C73B'
+            main: '#D9BF3D'
         }
     }
 });

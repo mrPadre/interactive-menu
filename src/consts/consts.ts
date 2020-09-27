@@ -1,3 +1,5 @@
+import { Comment, Product } from "../service/store/reducer";
+
 export interface CategoryItem{
     id: string;
     label: string;
@@ -11,15 +13,15 @@ export const CATEGORY = [
     {id: 'bread', label: 'Хлеб'},
 ];
 
-export const findRating = (item: any) => {
-    if (item.comments.length) {
-        const arr = item.comments.reduce((sum: any, el: any) => {
+export const findRating = (product: Product): number => {
+    if (product.comments.length) {
+        const arr = product.comments.reduce((sum: number, el: Comment) => {
             if (el.rating !== null) {
-                return Math.round(+sum + +el.rating);
+                return Math.round(sum + el.rating);
             }
-        }, [0]);
-        return +arr / item.comments.length
-    } 
-
-    
+            return sum;
+        }, 0);
+        return arr / product.comments.length
+    }
+    return 0;
 }

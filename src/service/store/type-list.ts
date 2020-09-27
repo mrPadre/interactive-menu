@@ -21,3 +21,6 @@ export const CLEAN_ORDER = 'CLEAN_ORDER';
 export const EDIT_ORDER = 'EDIT_ORDER';
 export const ADD_ACTIVE_ORDER = 'ADD_ACTIVE_ORDER';
 export const INIT_ACTIVE_ORDER = 'INIT_ACTIVE_ORDER';
+export const ADD_FILTER = 'ADD_FILTER';
+export const REMOVE_FILTER = 'REMOVE_FILTER';
+export const CLEAN_FILTER = 'CLEAN_FILTER';

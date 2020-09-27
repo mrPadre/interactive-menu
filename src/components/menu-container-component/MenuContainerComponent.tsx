@@ -76,11 +76,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-interface Menu {
-    label: string;
-    href: string;
-}
-
 interface Enum {
     [key:string]: string;
 }
